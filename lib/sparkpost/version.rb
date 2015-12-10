@@ -1,3 +1,3 @@
-module Sparkpost
-    VERSION = "0.0.1"
+module SparkPost
+    VERSION = '0.0.1'.freeze
 end

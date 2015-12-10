@@ -1,5 +1,2 @@
 require_relative 'sparkpost/version'
-
-module Sparkpost
-# Your code goes here...
-end
+require_relative 'sparkpost/transmission'
