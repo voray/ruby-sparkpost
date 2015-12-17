@@ -12,7 +12,7 @@ module SparkPost
     def initialize(api_key = nil)
       @api_key = (api_key || ENV['SPARKPOST_API_KEY']).to_s
       if @api_key.blank?
-        raise SparkPost::Exception.new('No API key provided. Either provide api_key with constructor or set SPARKPOST_API_KEY environment variable')
+        fail ArgumentError, 'No API key provided. Either provide api_key with constructor or set SPARKPOST_API_KEY environment variable'
       end
     end
 
@@ -21,13 +21,13 @@ module SparkPost
     end
 
     def transmit(to, from, subject, html_message = nil, **options)
-      # todo add validations for to, from
+      #todo add validations for to, from
       unless to.is_a?(Array)
         to = [to]
       end
 
-      if html_message.blank? && options['text_message'].blank?
-        raise SparkPost::Exception.new('Content missing. Either provide html_message or text_message in options parameter')
+      if html_message.blank? && options[:text_message].blank?
+        fail ArgumentError, 'Content missing. Either provide html_message or text_message in options parameter'
       end
 
       options.merge!(
