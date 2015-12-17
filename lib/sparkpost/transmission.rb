@@ -2,8 +2,8 @@ require 'net/http'
 require 'uri'
 require 'http'
 require_relative '../core_extensions/object'
-require_relative './request'
-require_relative './exceptions'
+require_relative 'request'
+require_relative 'exceptions'
 
 module SparkPost
   class Transmission

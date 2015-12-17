@@ -1,8 +1,8 @@
 require 'net/http'
 require 'json'
 
-require_relative './version'
-require_relative './exceptions'
+require_relative 'version'
+require_relative 'exceptions'
 
 module SparkPost
   module Request
