@@ -6,17 +6,16 @@ require_relative 'exceptions'
 
 module SparkPost
   module Request
-    API_HOST = 'https://api.sparkpost.com'
 
-    def request(url, data)
+    def request(url, api_key, data)
       uri = URI.parse(url)
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true
-      # http.set_debug_output($stdout)
+      http.set_debug_output($stdout)
       headers = {
           'User-Agent' => 'ruby-sparkpost/' + VERSION,
           'Content-Type' => 'application/json',
-          'Authorization' => @api_key
+          'Authorization' => api_key
       }
       req = Net::HTTP::Post.new(uri.path, initheader=headers)
       req.body = data.to_json
@@ -27,11 +26,12 @@ module SparkPost
     def process_response(response)
       response = JSON.parse(response.body)
       if response['errors']
-        fail SparkPost::DeliveryException, response['error']
+        fail SparkPost::DeliveryException, response['errors']
       else
         response['results']
       end
-    end
+    end    
 
+    module_function :request, :process_response
   end
 end

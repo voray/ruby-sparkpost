@@ -1,32 +1,23 @@
 require 'spec_helper'
 
 RSpec.describe SparkPost::Transmission do
-  describe '#api_key' do 
-    let(:transmission) { SparkPost::Transmission.new(api_key='123') }
+  describe '#initialize' do 
+    context 'when api key and host are passed'
+    let(:transmission) { SparkPost::Transmission.new('123', 'http://sparkpost.com') }
 
-    context 'when api key is explicitly passed' do
-        it { expect(transmission.instance_variables).to include(:@api_key) }
-        it { expect(transmission.instance_variable_get(:@api_key)).to eq('123') }
-    end
+    it { expect(transmission.instance_variables).to include(:@api_key) }
+    it { expect(transmission.instance_variables).to include(:@api_host) }
+    it { expect(transmission.instance_variable_get(:@api_key)).to eq('123') }
+    it { expect(transmission.instance_variable_get(:@api_host)).to eq('http://sparkpost.com') }
 
-    context 'when api key passed via env variable' do 
-        before do 
-            ENV['SPARKPOST_API_KEY'] = '456'
-        end
-        let(:transmission) { SparkPost::Transmission.new }
-        it { expect(transmission.instance_variable_get(:@api_key)).to eq('456')}
-    end
-
-    context 'when api key not available at all' do 
-        before do 
-            ENV['SPARKPOST_API_KEY'] = nil
-        end
-        it {expect {SparkPost::Transmission.new  }.to raise_error(ArgumentError).with_message(/No API key provided/)}
+    context 'when api key or host not passed' do 
+        it {expect {SparkPost::Transmission.new }.to raise_error(ArgumentError) }
+        it {expect {SparkPost::Transmission.new(123) }.to raise_error(ArgumentError) }
     end
   end
 
   describe '#transmit' do 
-    let(:transmission) { SparkPost::Transmission.new(api_key='123456')}
+    let(:transmission) { SparkPost::Transmission.new('123456', 'https://api.sparkpost.com')}
     let(:url) { 'https://api.sparkpost.com/api/v1/transmissions' }
     before do 
         allow(transmission).to receive(:request).and_return({})
@@ -41,7 +32,7 @@ RSpec.describe SparkPost::Transmission do
     end
 
     it 'requests with correct parameters' do 
-        allow(transmission).to receive(:request) do |_url, data| 
+        allow(transmission).to receive(:request) do |_url, api_key, data| 
             expect(data[:recipients].length).to eq(1)
             expect(data[:recipients][0][:address]).to eq({email: 'to@example.com'})
             expect(data[:content][:from]).to eq('from@example.com')
@@ -52,7 +43,7 @@ RSpec.describe SparkPost::Transmission do
     end
 
     it 'handles array of recipients correctly' do 
-        allow(transmission).to receive(:request) do |_url, data| 
+        allow(transmission).to receive(:request) do |_url, api_key, data| 
             expect(data[:recipients].length).to eq(1)
             expect(data[:recipients][0][:address]).to eq({email: 'to@example.com'})
         end

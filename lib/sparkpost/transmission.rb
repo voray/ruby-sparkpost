@@ -9,15 +9,13 @@ module SparkPost
   class Transmission
     include Request
 
-    def initialize(api_key = nil)
-      @api_key = (api_key || ENV['SPARKPOST_API_KEY']).to_s
-      if @api_key.blank?
-        fail ArgumentError, 'No API key provided. Either provide api_key with constructor or set SPARKPOST_API_KEY environment variable'
-      end
+    def initialize(api_key, api_host)
+      @api_key = api_key
+      @api_host = api_host
     end
 
     def endpoint
-      API_HOST.concat('/api/v1/transmissions')
+      @api_host.concat('/api/v1/transmissions')
     end
 
     def transmit(to, from, subject, html_message = nil, **options)
@@ -43,7 +41,7 @@ module SparkPost
           }
       )
 
-      request(endpoint, options)
+      request(endpoint, @api_key, options)
     end
 
     private
