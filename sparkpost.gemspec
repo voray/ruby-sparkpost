@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["SparkPost", "Aimee Knight", "Mohammad Hossain"]
   spec.email         = "developers@sparkpost.com"
   spec.summary       = "SparkPost Ruby API client"
-  spec.homepage      = "https://developers.sparkpost.com"
+  spec.homepage      = "https://github.com/SparkPost/ruby-sparkpost"
   spec.license       = "Apache-2.0"
 
   spec.files         = `git ls-files -z`.split("\x0")
