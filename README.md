@@ -4,6 +4,8 @@
 
 # SparkPost Ruby API Client
 
+[![Travis CI](https://travis-ci.org/SparkPost/ruby-sparkpost.svg?branch=master)](https://travis-ci.org/SparkPost/ruby-sparkpost)
+
 The official Ruby client library for Sparkpost
 
 ## Installation
