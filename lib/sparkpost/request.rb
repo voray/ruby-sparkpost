@@ -11,7 +11,6 @@ module SparkPost
       uri = URI.parse(url)
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true
-      http.set_debug_output($stdout)
       headers = {
           'User-Agent' => 'ruby-sparkpost/' + VERSION,
           'Content-Type' => 'application/json',
