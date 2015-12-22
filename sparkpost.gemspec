@@ -6,12 +6,11 @@ require './lib/sparkpost/version'
 Gem::Specification.new do |spec|
   spec.name          = "sparkpost"
   spec.version       = SparkPost::VERSION
-  spec.authors       = ["aimee", "mhossain"]
-  spec.email         = ["aimee.knight@sparkpost.com", "mohammad.hossain@sparkpost.com"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
-  spec.homepage      = "http://developers.sparkpost.com"
-  spec.license       = "MIT"
+  spec.authors       = ["SparkPost", "Aimee Knight", "Mohammad Hossain"]
+  spec.email         = "developers@sparkpost.com"
+  spec.summary       = "SparkPost Ruby API client"
+  spec.homepage      = "https://developers.sparkpost.com"
+  spec.license       = "Apache-2.0"
 
   spec.files         = `git ls-files -z`.split("\x0")
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
@@ -24,5 +23,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rspec", "~> 3.3.0"
   spec.add_development_dependency "simplecov", "~> 0.11.1"
-    spec.add_development_dependency "webmock", "~> 1.22.3"
+  spec.add_development_dependency "webmock", "~> 1.22.3"
 end
