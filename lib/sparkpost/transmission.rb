@@ -18,7 +18,7 @@ module SparkPost
       @api_host.concat('/api/v1/transmissions')
     end
 
-    def transmit(to, from, subject, html_message = nil, **options)
+    def send_message(to, from, subject, html_message = nil, **options)
       #todo add validations for to, from
       unless to.is_a?(Array)
         to = [to]
