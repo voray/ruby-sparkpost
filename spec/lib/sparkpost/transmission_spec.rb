@@ -16,7 +16,7 @@ RSpec.describe SparkPost::Transmission do
     end
   end
 
-  describe '#transmit' do 
+  describe '#send_message' do 
     let(:transmission) { SparkPost::Transmission.new('123456', 'https://api.sparkpost.com')}
     let(:url) { 'https://api.sparkpost.com/api/v1/transmissions' }
     before do 
@@ -28,7 +28,7 @@ RSpec.describe SparkPost::Transmission do
             expect(_url).to eq(url)
         end
 
-        transmission.transmit('to@example.com', 'from@example.com', 'test subject', '<h1>Hello World</h1>')
+        transmission.send_message('to@example.com', 'from@example.com', 'test subject', '<h1>Hello World</h1>')
     end
 
     it 'requests with correct parameters' do 
@@ -39,7 +39,7 @@ RSpec.describe SparkPost::Transmission do
             expect(data[:content][:subject]).to eq('test subject')
             expect(data[:content][:html]).to eq('<h1>Hello World</h1>')
         end
-        transmission.transmit('to@example.com', 'from@example.com', 'test subject', '<h1>Hello World</h1>')
+        transmission.send_message('to@example.com', 'from@example.com', 'test subject', '<h1>Hello World</h1>')
     end
 
     it 'handles array of recipients correctly' do 
@@ -47,21 +47,21 @@ RSpec.describe SparkPost::Transmission do
             expect(data[:recipients].length).to eq(1)
             expect(data[:recipients][0][:address]).to eq({email: 'to@example.com'})
         end
-        transmission.transmit(['to@example.com'], 'from@example.com', 'test subject', '<h1>Hello World</h1>')
+        transmission.send_message(['to@example.com'], 'from@example.com', 'test subject', '<h1>Hello World</h1>')
     end
 
-    it { expect {transmission.transmit(['to@example.com'], 'from@example.com', 'test subject')}.to raise_error(ArgumentError).with_message(/Content missing/) }
-    it { expect {transmission.transmit(['to@example.com'], 'from@example.com', 'test subject', nil, {text_message: 'hello world'})}.to_not raise_error }
+    it { expect {transmission.send_message(['to@example.com'], 'from@example.com', 'test subject')}.to raise_error(ArgumentError).with_message(/Content missing/) }
+    it { expect {transmission.send_message(['to@example.com'], 'from@example.com', 'test subject', nil, {text_message: 'hello world'})}.to_not raise_error }
 
     it 'passes through delivery exception' do 
         allow(transmission).to receive(:request).and_raise(SparkPost::DeliveryException.new('Some delivery error'))
 
-        expect { transmission.transmit('to@example.com', 'from@example.com', 'test subject', '<h1>Hello World</h1>')}.to raise_error(SparkPost::DeliveryException).with_message(/Some delivery error/)
+        expect { transmission.send_message('to@example.com', 'from@example.com', 'test subject', '<h1>Hello World</h1>')}.to raise_error(SparkPost::DeliveryException).with_message(/Some delivery error/)
     end
 
     it 'passes responses' do 
         allow(transmission).to receive(:request).and_return({success: 1})
-        expect(transmission.transmit('to@example.com', 'from@example.com', 'test subject', '<h1>Hello World</h1>')).to eq({success: 1})
+        expect(transmission.send_message('to@example.com', 'from@example.com', 'test subject', '<h1>Hello World</h1>')).to eq({success: 1})
     end
   end
 end
