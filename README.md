@@ -2,9 +2,9 @@
 
 [Sign up](https://app.sparkpost.com/sign-up?src=Dev-Website&sfdcid=70160000000pqBb) for a SparkPost account and visit our [Developer Hub](https://developers.sparkpost.com) for even more content.
 
-# ruby-sparkpost
+# SparkPost Ruby API Client
 
-SparkPost client library for Ruby https://www.sparkpost.com
+The official Ruby client library for Sparkpost
 
 ## Installation
 
