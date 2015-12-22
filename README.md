@@ -24,7 +24,7 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Check [examples/transmission.rb](examples/transmission.rb)
 
 ## Development
 
