@@ -24,7 +24,18 @@ Or install it yourself as:
 
 ## Usage
 
-Check [examples/transmission.rb](examples/transmission.rb)
+```ruby
+require 'sparkpost'
+
+values = { substitution_data: { name: 'Sparky'}}
+sp = SparkPost::Client.new() # pass api key or get api key from ENV
+response = sp.transmission.send_message('RECIPIENT_EMAIL', 'SENDER_EMAIL', 'testemail', '<h1>HTML message</h1>', values)
+puts response
+
+# {"total_rejected_recipients"=>0, "total_accepted_recipients"=>1, "id"=>"123456789123456789"}
+```
+
+See: [examples/transmission.rb](examples/transmission.rb)
 
 ## Development
 
