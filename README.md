@@ -24,6 +24,20 @@ Or install it yourself as:
 
 ## Usage
 
+**Send an email**
+
+```ruby
+require 'sparkpost'
+
+sp = SparkPost::Client.new() # api key was set in ENV
+response = sp.transmission.send_message('RECIPIENT_EMAIL', 'SENDER_EMAIL', 'test email', '<h1>HTML message</h1>')
+put response
+
+# {"total_rejected_recipients"=>0, "total_accepted_recipients"=>1, "id"=>"123456789123456789"}
+```
+
+**Send email with substitution data**
+
 ```ruby
 require 'sparkpost'
 
