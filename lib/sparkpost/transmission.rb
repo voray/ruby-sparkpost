@@ -34,12 +34,16 @@ module SparkPost
               content: {
                   from: from,
                   subject: subject,
-                  text: options['text_message'],
+                  text: options.delete(:text_message),
                   html: html_message
               },
               options: {}
           }
       )
+      
+      if options[:attachments].present? 
+        options[:content][:attachments] = options.delete(:attachments)
+      end
 
       request(endpoint, @api_key, options)
     end

@@ -6,7 +6,7 @@
 
 [![Travis CI](https://travis-ci.org/SparkPost/ruby-sparkpost.svg?branch=master)](https://travis-ci.org/SparkPost/ruby-sparkpost) [![Coverage Status](https://coveralls.io/repos/SparkPost/ruby-sparkpost/badge.svg?branch=master&service=github)](https://coveralls.io/github/SparkPost/ruby-sparkpost?branch=master)
 
-The official Ruby client library for Sparkpost
+The official Ruby client library for SparkPost
 
 ## Installation
 
@@ -47,6 +47,29 @@ response = sp.transmission.send_message('RECIPIENT_EMAIL', 'SENDER_EMAIL', 'test
 puts response
 
 # {"total_rejected_recipients"=>0, "total_accepted_recipients"=>1, "id"=>"123456789123456789"}
+```
+
+**Send email with attachment**
+
+*You need to base64 encode of your attachment contents.*
+
+```ruby
+require 'sparkpost'
+
+# assuming there is a file named attachment.txt in the same directory
+attachment = Base64.encode64(File.open(File.expand_path('../attachment.txt', __FILE__), 'r') { |f| f.read })
+
+# prepare attachment data to pass to send_message method
+values = { 
+    attachments: [{ 
+        name: 'attachment.txt', 
+        type: 'text/plain', 
+        data: attachment 
+    }]
+}
+
+sp = SparkPost::Client.new() # pass api key or get api key from ENV
+sp.transmission.send_message('RECIPIENT_EMAIL', 'SENDER_EMAIL', 'testemail', '<h1>Email with an attachment</h1>', values)
 ```
 
 See: [examples/transmission.rb](examples/transmission.rb)
