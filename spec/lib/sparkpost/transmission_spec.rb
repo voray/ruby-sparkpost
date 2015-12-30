@@ -63,5 +63,23 @@ RSpec.describe SparkPost::Transmission do
         allow(transmission).to receive(:request).and_return({success: 1})
         expect(transmission.send_message('to@example.com', 'from@example.com', 'test subject', '<h1>Hello World</h1>')).to eq({success: 1})
     end
+
+    it 'sends attachments' do
+        attachment = { 
+            name: 'attachment.txt', 
+            type: 'text/plain', 
+            data: Base64.encode64('Hello World') 
+        }
+        options = { 
+            attachments: [attachment]
+        }
+
+        allow(transmission).to receive(:request) do |_url, api_key, data| 
+            expect(data[:content][:attachments]).to be_kind_of(Array)
+            expect(data[:content][:attachments].length).to eq(1)
+            expect(data[:content][:attachments][0]).to eq(attachment)
+        end
+        transmission.send_message(['to@example.com'], 'from@example.com', 'test subject', '<h1>Hello World</h1>', options)
+    end
   end
 end
