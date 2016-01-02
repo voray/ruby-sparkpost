@@ -1,0 +1,6 @@
+Style/FirstParameterIndentation:
+    Enabled: false
+Documentation:
+    Enabled: false
+Metrics/MethodLength:
+  Enabled: false

@@ -19,29 +19,26 @@ module SparkPost
     end
 
     def send_message(to, from, subject, html_message = nil, **options)
-      #todo add validations for to, from
-      unless to.is_a?(Array)
-        to = [to]
-      end
+      # TODO: add validations for to, from
+      to = [to] unless to.is_a?(Array)
 
       if html_message.blank? && options[:text_message].blank?
-        fail ArgumentError, 'Content missing. Either provide html_message or text_message in options parameter'
+        fail ArgumentError, 'Content missing. Either provide html_message or
+         text_message in options parameter'
       end
 
       options.merge!(
-          {
-              recipients: prepare_recipients(to),
-              content: {
-                  from: from,
-                  subject: subject,
-                  text: options.delete(:text_message),
-                  html: html_message
-              },
-              options: {}
-          }
+        recipients: prepare_recipients(to),
+        content: {
+          from: from,
+          subject: subject,
+          text: options.delete(:text_message),
+          html: html_message
+        },
+        options: {}
       )
-      
-      if options[:attachments].present? 
+
+      if options[:attachments].present?
         options[:content][:attachments] = options.delete(:attachments)
       end
 
@@ -49,16 +46,15 @@ module SparkPost
     end
 
     private
+
     def prepare_recipients(recipients)
       recipients.map do |recipient|
         {
-            address: {
-                email: recipient
-            }
+          address: {
+            email: recipient
+          }
         }
       end
     end
-
   end
 end
-
