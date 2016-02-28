@@ -4,7 +4,7 @@
 
 # SparkPost Ruby API Client
 
-[![Travis CI](https://travis-ci.org/SparkPost/ruby-sparkpost.svg?branch=master)](https://travis-ci.org/SparkPost/ruby-sparkpost) [![Coverage Status](https://coveralls.io/repos/SparkPost/ruby-sparkpost/badge.svg?branch=master&service=github)](https://coveralls.io/github/SparkPost/ruby-sparkpost?branch=master)
+[![Travis CI](https://travis-ci.org/SparkPost/ruby-sparkpost.svg?branch=master)](https://travis-ci.org/SparkPost/ruby-sparkpost) [![Coverage Status](https://coveralls.io/repos/SparkPost/ruby-sparkpost/badge.svg?branch=master&service=github)](https://coveralls.io/github/SparkPost/ruby-sparkpost?branch=master) [![Slack Status](http://slack.sparkpost.com/badge.svg)](http://slack.sparkpost.com)
 
 The official Ruby client library for SparkPost
 
