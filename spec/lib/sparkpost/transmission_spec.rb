@@ -63,6 +63,31 @@ RSpec.describe SparkPost::Transmission do
         '<h1>Hello World</h1>')
     end
 
+    it 'handles a recipient hash with email, name and header_to correctly' do
+      allow(transmission).to receive(:request) do |_url, _api_key, data|
+        expect(data[:recipients].length).to eq(1)
+        expect(data[:recipients][0][:address]).to eq(email: 'to@me.com',
+                                                     name: 'Me',
+                                                     header_to: 'no@reply.com'
+                                                    )
+      end
+      transmission.send_message(
+        { email: 'to@me.com', name: 'Me', header_to: 'no@reply.com' },
+        'from@example.com',
+        'test subject',
+        '<h1>Hello World</h1>')
+    end
+
+    it 'handles an invalid recipient hash' do
+      expect do
+        transmission.send_message(
+          { name: 'Me', header_to: 'no@reply.com' },
+          'from@example.com',
+          'test subject',
+          '<h1>Hello World</h1>')
+      end.to raise_error(/email missing/)
+    end
+
     it 'handles array of recipients correctly' do
       allow(transmission).to receive(:request) do |_url, _api_key, data|
         expect(data[:recipients].length).to eq(1)
@@ -73,6 +98,34 @@ RSpec.describe SparkPost::Transmission do
         'from@example.com',
         'test subject',
         '<h1>Hello World</h1>')
+    end
+
+    it 'handles array of recipient hashess correctly' do
+      allow(transmission).to receive(:request) do |_url, _api_key, data|
+        expect(data[:recipients].length).to eq(1)
+        expect(data[:recipients][0][:address]).to eq(email: 'to@me.com',
+                                                     name: 'Me',
+                                                     header_to: 'no@reply.com'
+                                                    )
+      end
+      transmission.send_message(
+        [{ email: 'to@me.com', name: 'Me', header_to: 'no@reply.com' }],
+        'from@example.com',
+        'test subject',
+        '<h1>Hello World</h1>')
+    end
+
+    it 'handles an array of invalid recipient hashes' do
+      expect do
+        transmission.send_message(
+          [
+            { to: 'to@me.com', name: 'Me', header_to: 'no@reply.com' },
+            { name: 'You', header_to: 'no@reply.com' }
+          ],
+          'from@example.com',
+          'test subject',
+          '<h1>Hello World</h1>')
+      end.to raise_error(/email missing/)
     end
 
     it do
