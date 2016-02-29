@@ -29,7 +29,7 @@ Or install it yourself as:
 ```ruby
 require 'sparkpost'
 
-sp = SparkPost::Client.new() # api key was set in ENV
+sp = SparkPost::Client.new() # api key was set in ENV through ENV['SPARKPOST_API_KEY']
 response = sp.transmission.send_message('RECIPIENT_EMAIL', 'SENDER_EMAIL', 'test email', '<h1>HTML message</h1>')
 put response
 
@@ -60,11 +60,11 @@ require 'sparkpost'
 attachment = Base64.encode64(File.open(File.expand_path('../attachment.txt', __FILE__), 'r') { |f| f.read })
 
 # prepare attachment data to pass to send_message method
-values = { 
-    attachments: [{ 
-        name: 'attachment.txt', 
-        type: 'text/plain', 
-        data: attachment 
+values = {
+    attachments: [{
+        name: 'attachment.txt',
+        type: 'text/plain',
+        data: attachment
     }]
 }
 
