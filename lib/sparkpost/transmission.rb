@@ -48,12 +48,16 @@ module SparkPost
     private
 
     def prepare_recipients(recipients)
-      recipients.map do |recipient|
-        {
-          address: {
-            email: recipient
-          }
-        }
+      recipients.map { |recipient| prepare_recipient(recipient) }
+    end
+
+    def prepare_recipient(recipient)
+      if recipient.is_a?(Hash)
+        raise ArgumentError,
+              "email missing - '#{recipient.inspect}'" unless recipient[:email]
+        { address: recipient }
+      else
+        { address: { email: recipient } }
       end
     end
   end
