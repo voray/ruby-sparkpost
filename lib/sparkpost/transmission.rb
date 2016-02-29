@@ -23,7 +23,7 @@ module SparkPost
       to = [to] unless to.is_a?(Array)
 
       if html_message.blank? && options[:text_message].blank?
-        fail ArgumentError, 'Content missing. Either provide html_message or
+        raise ArgumentError, 'Content missing. Either provide html_message or
          text_message in options parameter'
       end
 

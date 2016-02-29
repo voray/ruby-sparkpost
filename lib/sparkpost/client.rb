@@ -6,11 +6,11 @@ module SparkPost
       @api_key = (api_key || ENV['SPARKPOST_API_KEY']).to_s
       @api_host = (api_host || ENV['SPARKPOST_API_HOST']).to_s
 
-      fail ArgumentError, 'No API key is provided. Either provide
+      raise ArgumentError, 'No API key is provided. Either provide
        api_key with constructor or set SPARKPOST_API_KEY environment
         variable' if @api_key.blank?
 
-      fail ArgumentError, 'No API host is provided. Either provide
+      raise ArgumentError, 'No API host is provided. Either provide
        api_host with constructor or set SPARKPOST_API_HOST environment
         variable' if @api_host.blank?
     end
