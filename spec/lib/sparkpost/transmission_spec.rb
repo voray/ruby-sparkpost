@@ -27,6 +27,62 @@ RSpec.describe SparkPost::Transmission do
     end
   end
 
+  describe '#send_payload' do
+    let(:transmission) do
+      SparkPost::Transmission.new('123456', 'https://api.sparkpost.com')
+    end
+    let(:url) { 'https://api.sparkpost.com/api/v1/transmissions' }
+    let(:data) do
+      {
+        recipients: [
+          {
+            address: {
+              email: 'to@me.com', name: 'Me', header_to: 'no@reply.com'
+            }
+          }
+        ],
+        content: {
+          from: { email: 'me@me.com', name: 'Me' },
+          subject: 'test subject',
+          text: 'Hello Sparky',
+          html: '<h1>Hello Sparky</h1>'
+        }
+      }
+    end
+
+    it 'accepts a single hash representing the entire payload' do
+      allow(transmission).to receive(:request) do |_url, _api_key, data|
+        expect(data[:recipients].length).to eq(1)
+        expect(data[:recipients][0][:address]).to eq(email: 'to@me.com',
+                                                     name: 'Me',
+                                                     header_to: 'no@reply.com'
+                                                    )
+        expect(data[:content][:from]).to eq(email: 'me@me.com', name: 'Me')
+        expect(data[:content][:subject]).to eq('test subject')
+        expect(data[:content][:html]).to eq('<h1>Hello Sparky</h1>')
+      end
+
+      transmission.send_payload(data)
+    end
+
+    it 'passes through delivery exception' do
+      allow(transmission).to receive(:request).and_raise(
+        SparkPost::DeliveryException.new('Some delivery error'))
+
+      bad_data = data.merge(recipients: [])
+
+      expect do
+        transmission.send_payload(bad_data)
+      end.to raise_error(SparkPost::DeliveryException).with_message(
+        /Some delivery error/)
+    end
+
+    it 'passes responses' do
+      allow(transmission).to receive(:request).and_return(success: 1)
+      expect(transmission.send_payload(data)).to eq(success: 1)
+    end
+  end
+
   describe '#send_message' do
     let(:transmission) do
       SparkPost::Transmission.new('123456', 'https://api.sparkpost.com')
