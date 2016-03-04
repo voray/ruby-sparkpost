@@ -4,3 +4,7 @@ Documentation:
     Enabled: false
 Metrics/MethodLength:
   Enabled: false
+
+AllCops:
+  Exclude:
+    - './_examples/**/*'

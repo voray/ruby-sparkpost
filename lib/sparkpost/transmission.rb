@@ -46,14 +46,18 @@ module SparkPost
       }
 
       options.merge!(options_from_args) { |_k, opts, _args| opts }
-      if options[:attachments].present?
-        options[:content][:attachments] = options.delete(:attachments)
-      end
+      add_attachments(options)
 
       request(endpoint, @api_key, options)
     end
 
     private
+
+    def add_attachments(options)
+      if options[:attachments].present?
+        options[:content][:attachments] = options.delete(:attachments)
+      end
+    end
 
     def prepare_recipients(recipients)
       recipients.map { |recipient| prepare_recipient(recipient) }
