@@ -20,8 +20,9 @@ module SparkPost
 
     def send_payload(data = {})
       # TODO: consider refactoring this into send_message in v2
-      send_message(nil, nil, nil, nil, data)
+      request(endpoint, @api_key, data)
     end
+
 
     def send_message(to, from, subject, html_message = nil, **options)
       # TODO: add validations for to, from
