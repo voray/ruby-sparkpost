@@ -23,7 +23,6 @@ module SparkPost
       request(endpoint, @api_key, data)
     end
 
-
     def send_message(to, from, subject, html_message = nil, **options)
       # TODO: add validations for to, from
       to = [to] unless to.is_a?(Array)
