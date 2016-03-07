@@ -50,16 +50,11 @@ RSpec.describe SparkPost::Transmission do
       }
     end
 
-    it 'accepts a single hash representing the entire payload' do
-      allow(transmission).to receive(:request) do |_url, _api_key, data|
-        expect(data[:recipients].length).to eq(1)
-        expect(data[:recipients][0][:address]).to eq(email: 'to@me.com',
-                                                     name: 'Me',
-                                                     header_to: 'no@reply.com'
-                                                    )
-        expect(data[:content][:from]).to eq(email: 'me@me.com', name: 'Me')
-        expect(data[:content][:subject]).to eq('test subject')
-        expect(data[:content][:html]).to eq('<h1>Hello Sparky</h1>')
+    it 'calls request with correct data' do
+      allow(transmission).to receive(:request) do |req_url, req_api_key, req_data|
+        expect(req_api_key).to eq('123456')
+        expect(req_url).to eq(url)
+        expect(req_data).to eq(data)
       end
 
       transmission.send_payload(data)
@@ -90,6 +85,34 @@ RSpec.describe SparkPost::Transmission do
     let(:url) { 'https://api.sparkpost.com/api/v1/transmissions' }
     before do
       allow(transmission).to receive(:request).and_return({})
+    end
+
+    it 'calls send_payload with prepared data' do
+      prepared_data = {
+        recipients: [
+          {
+            address: {
+              email: 'to@me.com'
+            }
+          }
+        ],
+        content: {
+          from: 'me@me.com',
+          subject: 'test subject',
+          text: 'hello sparky',
+          html: '<h1>Hello Sparky</h1>'
+        },
+        options: {}
+      }
+
+      expect(transmission).to receive(:send_payload).with(prepared_data)
+      transmission.send_message(
+        'to@me.com',
+        'me@me.com',
+        'test subject',
+        '<h1>Hello Sparky</h1>',
+        text_message: 'hello sparky'
+      )
     end
 
     it 'requests correct endpoint' do
