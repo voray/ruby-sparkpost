@@ -5,6 +5,9 @@ Documentation:
 Metrics/MethodLength:
   Enabled: false
 
+Metrics/LineLength:
+  Exclude:
+    - spec/**/*
 AllCops:
   Exclude:
-    - './_examples/**/*'
+    - _examples/**/*

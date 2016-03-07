@@ -48,7 +48,7 @@ module SparkPost
       options.merge!(options_from_args) { |_k, opts, _args| opts }
       add_attachments(options)
 
-      request(endpoint, @api_key, options)
+      send_payload(options)
     end
 
     private
