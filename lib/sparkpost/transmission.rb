@@ -15,7 +15,7 @@ module SparkPost
     end
 
     def endpoint
-      @api_host.concat('/api/v1/transmissions')
+      @endpoint ||= @api_host.concat('/api/v1/transmissions')
     end
 
     def send_payload(data = {})
