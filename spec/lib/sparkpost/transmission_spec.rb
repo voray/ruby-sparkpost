@@ -207,7 +207,7 @@ RSpec.describe SparkPost::Transmission do
       end.to raise_error(/email missing/)
     end
 
-    it do
+    it 'raises erorr when no content passed' do
       expect do
         transmission.send_message(
         ['to@example.com'],
@@ -215,7 +215,8 @@ RSpec.describe SparkPost::Transmission do
         'test subject')
       end.to raise_error(ArgumentError).with_message(/Content missing/)
     end
-    it do
+
+    it 'it does not raise error when text_message passed' do
       expect do
         transmission.send_message(
         ['to@example.com'],
