@@ -273,4 +273,19 @@ RSpec.describe SparkPost::Transmission do
         options)
     end
   end
+
+  describe '#endpoint' do
+    let(:transmission) do
+      SparkPost::Transmission.new('123456', 'https://api.sparkpost.com')
+    end
+
+    it 'returns correct endpoint' do
+      expect(transmission.endpoint).to eq('https://api.sparkpost.com/api/v1/transmissions')
+    end
+
+    it 'returns correct endpoint on subsequent calls' do
+      expect(transmission.endpoint).to eq('https://api.sparkpost.com/api/v1/transmissions')
+      expect(transmission.endpoint).to eq('https://api.sparkpost.com/api/v1/transmissions')
+    end
+  end
 end
