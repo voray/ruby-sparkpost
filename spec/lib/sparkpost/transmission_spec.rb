@@ -27,6 +27,19 @@ RSpec.describe SparkPost::Transmission do
     end
   end
 
+  describe '#endpoint' do
+    let(:transmission) do
+      SparkPost::Transmission.new('123456', 'https://api.sparkpost.com')
+    end
+    let(:url) { 'https://api.sparkpost.com/api/v1/transmissions' }
+
+    it 'concats url just one time' do
+      transmission.endpoint
+
+      expect(transmission.endpoint).to eq(url)
+    end
+  end
+
   describe '#send_payload' do
     let(:transmission) do
       SparkPost::Transmission.new('123456', 'https://api.sparkpost.com')
