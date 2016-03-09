@@ -33,7 +33,11 @@ RSpec.describe SparkPost::Transmission do
     end
     let(:url) { 'https://api.sparkpost.com/api/v1/transmissions' }
 
-    it 'concats url just one time' do
+    it 'returns correct endpoint' do
+      expect(transmission.endpoint).to eq(url)
+    end
+
+    it 'returns correct endpoint on subsequent calls' do
       transmission.endpoint
 
       expect(transmission.endpoint).to eq(url)
