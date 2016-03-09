@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'http', '0.9.8'
 
   spec.add_development_dependency 'bundler', '~> 1.5'
-  spec.add_development_dependency 'rake'
+  spec.add_development_dependency 'rake', '<11'
   spec.add_development_dependency 'rspec', '~> 3.3.0'
   spec.add_development_dependency 'simplecov', '~> 0.11.1'
   spec.add_development_dependency 'webmock', '~> 1.22.3'
