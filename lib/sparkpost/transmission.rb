@@ -25,7 +25,6 @@ module SparkPost
 
     def send_message(to, from, subject, html_message = nil, **options)
       # TODO: add validations for to, from
-      to = [to] unless to.is_a?(Array)
       html_message = content_from(options, :html) || html_message
       text_message = content_from(options, :text) || options[:text_message]
 
@@ -51,16 +50,16 @@ module SparkPost
       send_payload(options)
     end
 
-    private
+    def prepare_recipients(recipients)
+      recipients = [recipients] unless recipients.is_a?(Array)
+      recipients.map { |recipient| prepare_recipient(recipient) }
+    end
 
+    private
     def add_attachments(options)
       if options[:attachments].present?
         options[:content][:attachments] = options.delete(:attachments)
       end
-    end
-
-    def prepare_recipients(recipients)
-      recipients.map { |recipient| prepare_recipient(recipient) }
     end
 
     def prepare_recipient(recipient)
