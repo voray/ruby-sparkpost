@@ -56,6 +56,7 @@ module SparkPost
     end
 
     private
+
     def add_attachments(options)
       if options[:attachments].present?
         options[:content][:attachments] = options.delete(:attachments)
