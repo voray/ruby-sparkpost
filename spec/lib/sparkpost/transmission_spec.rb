@@ -16,11 +16,11 @@ RSpec.describe SparkPost::Transmission do
     end
 
     context 'when api key or host not passed' do
-      it do
+      it 'raises when api key and host not passed' do
         expect { SparkPost::Transmission.new }
           .to raise_error(ArgumentError)
       end
-      it do
+      it 'raises when host not passed' do
         expect { SparkPost::Transmission.new(123) }
           .to raise_error(ArgumentError)
       end
@@ -144,6 +144,20 @@ RSpec.describe SparkPost::Transmission do
         '<h1>Hello World</h1>')
     end
 
+    it 'calls prepare_attachments' do
+      allow(transmission).to receive(:request)
+
+      allow(transmission).to receive(:prepare_recipients) do |recipients|
+        expect(recipients).to eq('to@example.com')
+      end
+
+      transmission.send_message(
+        'to@example.com',
+        'from@example.com',
+        'test subject',
+        '<h1>Hello World</h1>')
+    end
+
     it 'requests with correct parameters' do
       allow(transmission).to receive(:request) do |_url, _api_key, data|
         expect(data[:recipients].length).to eq(1)
@@ -159,88 +173,23 @@ RSpec.describe SparkPost::Transmission do
         '<h1>Hello World</h1>')
     end
 
-    it 'handles a recipient hash with email, name and header_to correctly' do
-      allow(transmission).to receive(:request) do |_url, _api_key, data|
-        expect(data[:recipients].length).to eq(1)
-        expect(data[:recipients][0][:address]).to eq(email: 'to@me.com',
-                                                     name: 'Me',
-                                                     header_to: 'no@reply.com'
-                                                    )
-      end
-      transmission.send_message(
-        { email: 'to@me.com', name: 'Me', header_to: 'no@reply.com' },
-        'from@example.com',
-        'test subject',
-        '<h1>Hello World</h1>')
-    end
-
-    it 'handles an invalid recipient hash' do
-      expect do
-        transmission.send_message(
-          { name: 'Me', header_to: 'no@reply.com' },
-          'from@example.com',
-          'test subject',
-          '<h1>Hello World</h1>')
-      end.to raise_error(/email missing/)
-    end
-
-    it 'handles array of recipients correctly' do
-      allow(transmission).to receive(:request) do |_url, _api_key, data|
-        expect(data[:recipients].length).to eq(1)
-        expect(data[:recipients][0][:address]).to eq(email: 'to@example.com')
-      end
-      transmission.send_message(
-        ['to@example.com'],
-        'from@example.com',
-        'test subject',
-        '<h1>Hello World</h1>')
-    end
-
-    it 'handles array of recipient hashess correctly' do
-      allow(transmission).to receive(:request) do |_url, _api_key, data|
-        expect(data[:recipients].length).to eq(1)
-        expect(data[:recipients][0][:address]).to eq(email: 'to@me.com',
-                                                     name: 'Me',
-                                                     header_to: 'no@reply.com'
-                                                    )
-      end
-      transmission.send_message(
-        [{ email: 'to@me.com', name: 'Me', header_to: 'no@reply.com' }],
-        'from@example.com',
-        'test subject',
-        '<h1>Hello World</h1>')
-    end
-
-    it 'handles an array of invalid recipient hashes' do
-      expect do
-        transmission.send_message(
-          [
-            { to: 'to@me.com', name: 'Me', header_to: 'no@reply.com' },
-            { name: 'You', header_to: 'no@reply.com' }
-          ],
-          'from@example.com',
-          'test subject',
-          '<h1>Hello World</h1>')
-      end.to raise_error(/email missing/)
-    end
-
     it 'raises erorr when no content passed' do
       expect do
         transmission.send_message(
-        ['to@example.com'],
-        'from@example.com',
-        'test subject')
+          ['to@example.com'],
+          'from@example.com',
+          'test subject')
       end.to raise_error(ArgumentError).with_message(/Content missing/)
     end
 
     it 'it does not raise error when text_message passed' do
       expect do
         transmission.send_message(
-        ['to@example.com'],
-        'from@example.com',
-        'test subject',
-        nil,
-        text_message: 'hello world')
+          ['to@example.com'],
+          'from@example.com',
+          'test subject',
+          nil,
+          text_message: 'hello world')
       end.to_not raise_error
     end
 
@@ -250,10 +199,10 @@ RSpec.describe SparkPost::Transmission do
 
       expect do
         transmission.send_message(
-        'to@example.com',
-        'from@example.com',
-        'test subject',
-        '<h1>Hello World</h1>')
+          'to@example.com',
+          'from@example.com',
+          'test subject',
+          '<h1>Hello World</h1>')
       end.to raise_error(SparkPost::DeliveryException).with_message(
         /Some delivery error/)
     end
@@ -288,6 +237,56 @@ RSpec.describe SparkPost::Transmission do
         'test subject',
         '<h1>Hello World</h1>',
         options)
+    end
+  end
+
+  describe '#prepare_recipients' do
+    let(:transmission) do
+      SparkPost::Transmission.new('123456', 'https://api.sparkpost.com')
+    end
+
+    it 'returns an array' do
+      expect(transmission.prepare_recipients('to@domain.com')).to be_kind_of(Array)
+    end
+
+    it 'handles a recipient hash with email, name and header_to correctly' do
+      prepared_recipients = transmission.prepare_recipients(
+        email: 'to@me.com', name: 'Me', header_to: 'no@reply.com'
+      )
+
+      expect(prepared_recipients.length).to eq(1)
+      expect(prepared_recipients[0]).to eq(address: { email: 'to@me.com', name: 'Me', header_to: 'no@reply.com' })
+    end
+
+    it 'handles array of recipient hashes correctly' do
+      prepared_recipients = transmission.prepare_recipients(
+        [{ email: 'to@me.com', name: 'Me', header_to: 'no@reply.com' }]
+      )
+      expect(prepared_recipients.length).to eq(1)
+      expect(prepared_recipients[0]).to eq(address: { email: 'to@me.com', name: 'Me', header_to: 'no@reply.com' })
+    end
+
+    it 'handles array of recipients correctly' do
+      expect(
+        transmission.prepare_recipients(['to@example.com'])
+      ).to eq([{ address: { email: 'to@example.com' } }])
+    end
+
+    it 'raises for invalid recipient hash' do
+      expect do
+        transmission.prepare_recipients(name: 'Me', header_to: 'no@reply.com')
+      end.to raise_error(ArgumentError, /email missing/)
+    end
+
+    it 'throws for an array of invalid recipient hashes' do
+      expect do
+        transmission.prepare_recipients(
+          [
+            { to: 'to@me.com', name: 'Me', header_to: 'no@reply.com' },
+            { name: 'You', header_to: 'no@reply.com' }
+          ]
+        )
+      end.to raise_error(ArgumentError, /email missing/)
     end
   end
 end
