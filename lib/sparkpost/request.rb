@@ -16,7 +16,7 @@ module SparkPost
         'Authorization' => api_key
       }
       req = Net::HTTP::Post.new(uri.path, headers)
-      req.body = data.to_json
+      req.body = JSON.generate(data)
 
       process_response(http.request(req))
     end

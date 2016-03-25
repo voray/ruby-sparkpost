@@ -17,7 +17,7 @@ RSpec.describe SparkPost::Request do
       }
       before do
         stub_request(:post, api_url).to_return(
-          body: response.to_json,
+          body: JSON.generate(response),
           status: 200)
       end
       it do
@@ -29,7 +29,7 @@ RSpec.describe SparkPost::Request do
       response = { errors: { message: 'end of world' } }
       before do
         stub_request(:post, api_url).to_return(
-          body: response.to_json,
+          body: JSON.generate(response),
           status: 500)
       end
 
