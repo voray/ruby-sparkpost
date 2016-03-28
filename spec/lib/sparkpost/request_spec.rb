@@ -7,25 +7,63 @@ RSpec.describe SparkPost::Request do
     let(:api_key) { '123' }
     let(:request) { SparkPost::Request.request }
 
-    context 'when was successful' do
-      response = {
-        results: {
-          'total_rejected_recipients' => 0,
-          'total_accepted_recipients' => 1,
-          'id' => '123456789123456789'
-        }
+    success_response = {
+      results: {
+        'total_rejected_recipients' => 0,
+        'total_accepted_recipients' => 1,
+        'id' => '123456789123456789'
       }
+    }
+
+    context 'when GET request was successful' do
+      before do
+        stub_request(:get, api_url).to_return(
+          body: JSON.generate(success_response),
+          status: 200)
+      end
+      it do
+        expect(SparkPost::Request.request(api_url, '123', {}, 'GET'))
+          .to eq(success_response[:results])
+      end
+    end
+
+    context 'when PUT request was successful' do
+      before do
+        stub_request(:put, api_url).to_return(
+          body: JSON.generate(success_response),
+          status: 200)
+      end
+      it do
+        expect(SparkPost::Request.request(api_url, '123', {}, 'PUT'))
+          .to eq(success_response[:results])
+      end
+    end
+
+    context 'when DELETE request was successful' do
+      before do
+        stub_request(:delete, api_url).to_return(
+          body: JSON.generate(success_response),
+          status: 200)
+      end
+      it do
+        expect(SparkPost::Request.request(api_url, '123', {}, 'DELETE'))
+          .to eq(success_response[:results])
+      end
+    end
+
+    context 'when POST request was successful' do
       before do
         stub_request(:post, api_url).to_return(
-          body: JSON.generate(response),
+          body: JSON.generate(success_response),
           status: 200)
       end
       it do
         expect(SparkPost::Request.request(api_url, '123', {}))
-          .to eq(response[:results])
+          .to eq(success_response[:results])
       end
     end
-    context 'when was not successful' do
+
+    context 'when request was not successful' do
       response = { errors: { message: 'end of world' } }
       before do
         stub_request(:post, api_url).to_return(

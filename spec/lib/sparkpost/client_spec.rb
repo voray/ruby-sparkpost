@@ -45,4 +45,14 @@ RSpec.describe SparkPost::Transmission do
       expect(client.transmission).to eq(client.transmission)
     end
   end
+
+  describe '#template' do
+    let(:client) { SparkPost::Client.new('123', 'http://sparkpost.com') }
+
+    it { expect(client.template).to be_kind_of(SparkPost::Template) }
+
+    it 'returns same instances on subsequent call' do
+      expect(client.template).to eq(client.template)
+    end
+  end
 end
