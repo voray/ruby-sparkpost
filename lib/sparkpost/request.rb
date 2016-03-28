@@ -35,7 +35,9 @@ module SparkPost
             else
               Net::HTTP::Post.new(uri.path, headers)
             end
-      req.body = JSON.generate(data)
+      if data.present?
+        req.body = JSON.generate(data)
+      end
       req
     end
 
