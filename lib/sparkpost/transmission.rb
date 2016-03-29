@@ -14,7 +14,8 @@ module SparkPost
     end
 
     def endpoint
-      warn "[DEPRECATION] `endpoint` is deprecated.  Please use `request_url` instead."
+      warn '[DEPRECATION] `endpoint` is deprecated. \
+             Please use `request_url` instead.'
       @endpoint ||= @api_host.concat('/api/v1/transmissions')
     end
 
