@@ -6,7 +6,7 @@ require_relative 'exceptions'
 
 module SparkPost
   class Transmission < Api
-    PATH = '/api/v1/transmissions'
+    PATH = '/api/v1/transmissions'.freeze
 
     def initialize(api_key, api_host)
       @api_key = api_key

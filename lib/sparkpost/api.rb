@@ -3,7 +3,7 @@ require_relative 'request'
 module SparkPost
   class Api
     include SparkPost::Request
-    PATH = ''
+    PATH = ''.freeze
     def initialize(api_key, api_host)
       @api_key = api_key
       @api_host = api_host

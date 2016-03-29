@@ -6,7 +6,7 @@ require_relative 'exceptions'
 
 module SparkPost
   class Template < Api
-    PATH = '/api/v1/templates'
+    PATH = '/api/v1/templates'.freeze
 
     def list
       request(api_url, @api_key, nil, 'GET')
