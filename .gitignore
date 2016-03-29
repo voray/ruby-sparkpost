@@ -20,3 +20,4 @@ tmp
 .ruby-gemset
 coverage
 _examples
+.byebug_history
