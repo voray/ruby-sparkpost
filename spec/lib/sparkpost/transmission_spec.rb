@@ -38,12 +38,9 @@ RSpec.describe SparkPost::Transmission do
     let(:url) { 'https://api.sparkpost.com/api/v1/transmissions' }
 
     it 'returns deprecation warning' do
-      expect { transmission.endpoint}.to output(/DEPRECATION/).to_stderr
-
+      expect { transmission.endpoint }.to output(/DEPRECATION/).to_stderr
     end
   end
-
-
 
   describe '#send_message' do
     let(:transmission) do
