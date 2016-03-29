@@ -15,6 +15,10 @@ RSpec.describe SparkPost::Template do
         .to eq('http://sparkpost.com')
     end
 
+    it 'has correct path' do
+      expect(template.class::PATH).to eq('/api/v1/templates')
+    end
+
     context 'when api key or host not passed' do
       it do
         expect { SparkPost::Template.new }
@@ -24,23 +28,6 @@ RSpec.describe SparkPost::Template do
         expect { SparkPost::Template.new(123) }
           .to raise_error(ArgumentError)
       end
-    end
-  end
-
-  describe '#endpoint' do
-    let(:template) do
-      SparkPost::Template.new('123456', 'https://api.sparkpost.com')
-    end
-    let(:url) { 'https://api.sparkpost.com/api/v1/templates' }
-
-    it 'returns correct endpoint' do
-      expect(template.endpoint).to eq(url)
-    end
-
-    it 'returns correct endpoint on subsequent calls' do
-      template.endpoint
-
-      expect(template.endpoint).to eq(url)
     end
   end
 
