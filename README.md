@@ -72,7 +72,7 @@ sp = SparkPost::Client.new() # pass api key or get api key from ENV
 sp.transmission.send_message('RECIPIENT_EMAIL', 'SENDER_EMAIL', 'testemail', '<h1>Email with an attachment</h1>', values)
 ```
 
-See: [examples/transmission](examples/transmission)
+See: [examples](examples)
 
 ## Development
 
