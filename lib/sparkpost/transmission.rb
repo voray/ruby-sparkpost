@@ -1,13 +1,12 @@
 require 'net/http'
 require 'uri'
-require 'http'
 require_relative '../core_extensions/object'
-require_relative 'request'
+require_relative 'api'
 require_relative 'exceptions'
 
 module SparkPost
-  class Transmission
-    include Request
+  class Transmission < Api
+    PATH = '/api/v1/transmissions'
 
     def initialize(api_key, api_host)
       @api_key = api_key
@@ -15,12 +14,8 @@ module SparkPost
     end
 
     def endpoint
+      warn "[DEPRECATION] `endpoint` is deprecated.  Please use `request_url` instead."
       @endpoint ||= @api_host.concat('/api/v1/transmissions')
-    end
-
-    def send_payload(data = {})
-      # TODO: consider refactoring this into send_message in v2
-      request(endpoint, @api_key, data)
     end
 
     def send_message(to, from, subject, html_message = nil, **options)
