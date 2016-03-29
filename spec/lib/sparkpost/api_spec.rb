@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe SparkPost::Api do
-  let(:api) { api = SparkPost::Api.new('123', 'https://api.sparkpost.com') }
+  let(:api) { SparkPost::Api.new('123', 'https://api.sparkpost.com') }
 
   describe '#initialize' do
     context 'when api key and host are passed'
