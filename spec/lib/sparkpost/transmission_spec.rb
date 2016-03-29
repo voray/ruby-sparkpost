@@ -15,6 +15,10 @@ RSpec.describe SparkPost::Transmission do
         .to eq('http://sparkpost.com')
     end
 
+    it 'has correct path' do
+      expect(transmission.class::PATH).to eq('/api/v1/transmissions')
+    end
+
     context 'when api key or host not passed' do
       it 'raises when api key and host not passed' do
         expect { SparkPost::Transmission.new }
@@ -33,67 +37,13 @@ RSpec.describe SparkPost::Transmission do
     end
     let(:url) { 'https://api.sparkpost.com/api/v1/transmissions' }
 
-    it 'returns correct endpoint' do
-      expect(transmission.endpoint).to eq(url)
-    end
+    it 'returns deprecation warning' do
+      expect { transmission.endpoint}.to output(/DEPRECATION/).to_stderr
 
-    it 'returns correct endpoint on subsequent calls' do
-      transmission.endpoint
-
-      expect(transmission.endpoint).to eq(url)
     end
   end
 
-  describe '#send_payload' do
-    let(:transmission) do
-      SparkPost::Transmission.new('123456', 'https://api.sparkpost.com')
-    end
-    let(:url) { 'https://api.sparkpost.com/api/v1/transmissions' }
-    let(:data) do
-      {
-        recipients: [
-          {
-            address: {
-              email: 'to@me.com', name: 'Me', header_to: 'no@reply.com'
-            }
-          }
-        ],
-        content: {
-          from: { email: 'me@me.com', name: 'Me' },
-          subject: 'test subject',
-          text: 'Hello Sparky',
-          html: '<h1>Hello Sparky</h1>'
-        }
-      }
-    end
 
-    it 'calls request with correct data' do
-      allow(transmission).to receive(:request) do |req_url, req_api_key, req_data|
-        expect(req_api_key).to eq('123456')
-        expect(req_url).to eq(url)
-        expect(req_data).to eq(data)
-      end
-
-      transmission.send_payload(data)
-    end
-
-    it 'passes through delivery exception' do
-      allow(transmission).to receive(:request).and_raise(
-        SparkPost::DeliveryException.new('Some delivery error'))
-
-      bad_data = data.merge(recipients: [])
-
-      expect do
-        transmission.send_payload(bad_data)
-      end.to raise_error(SparkPost::DeliveryException).with_message(
-        /Some delivery error/)
-    end
-
-    it 'passes responses' do
-      allow(transmission).to receive(:request).and_return(success: 1)
-      expect(transmission.send_payload(data)).to eq(success: 1)
-    end
-  end
 
   describe '#send_message' do
     let(:transmission) do
