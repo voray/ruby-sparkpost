@@ -77,5 +77,24 @@ RSpec.describe SparkPost::Request do
             /end of world/)
       end
     end
+
+    describe 'json encoding' do
+      api_url = 'https://api.sparkpost.com/api/'
+      before do
+        stub_request(:post, api_url).to_return(
+          body: JSON.generate({}),
+          status: 200)
+      end
+
+      it 'encodes hash to json' do
+        allow(JSON).to receive(:generate).with(foo: 'bar')
+        SparkPost::Request.request(api_url, '123', foo: 'bar')
+      end
+
+      it 'does not encode nil to json' do
+        expect(JSON).to_not receive(:generate)
+        SparkPost::Request.request(api_url, '123', nil)
+      end
+    end
   end
 end
