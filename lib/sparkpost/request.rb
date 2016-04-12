@@ -18,6 +18,19 @@ module SparkPost
       process_response(http.request(req))
     end
 
+    def endpoint(subpath = nil, params = {})
+      url = String.new(@base_endpoint)
+      if subpath
+        url << '/' unless subpath.start_with?('/')
+        url << subpath
+      end
+      if params && params.any?
+        url << '?'
+        url << params.to_a.map { |x| "#{x[0]}=#{x[1]}" }.join('&')
+      end
+      url
+    end
+
     def configure_http(uri)
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true
@@ -31,7 +44,7 @@ module SparkPost
             when 'PUT'
               Net::HTTP::Put.new(uri.path, headers)
             when 'DELETE'
-              Net::HTTP::Delete.new(uri.path)
+              Net::HTTP::Delete.new(uri.path, headers)
             else
               Net::HTTP::Post.new(uri.path, headers)
             end

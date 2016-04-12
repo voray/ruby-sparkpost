@@ -12,10 +12,7 @@ module SparkPost
     def initialize(api_key, api_host)
       @api_key = api_key
       @api_host = api_host
-    end
-
-    def endpoint
-      @endpoint ||= @api_host.concat('/api/v1/transmissions')
+      @base_endpoint = "#{@api_host}/api/v1/transmissions"
     end
 
     def send_payload(data = {})
