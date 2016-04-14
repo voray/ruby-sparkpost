@@ -53,7 +53,10 @@ RSpec.describe SparkPost::Template do
     it 'calls request with correct data' do
       prepared_data = {
         content: {
-          from: 'me@me.com',
+          from: {
+            email: 'me@me.com',
+            name: 'Sparky'
+          },
           subject: 'test subject',
           text: 'Hello Sparky',
           html: '<h1>Hello Sparky</h1>'
@@ -74,50 +77,92 @@ RSpec.describe SparkPost::Template do
 
       template.create(
         'sample-template',
-        'me@me.com',
+        nil,
         'test subject',
         '<h1>Hello Sparky</h1>',
         text: 'Hello Sparky',
         is_transactional: true,
-        name: 'Sample Template'
+        name: 'Sample Template',
+        from_name: 'Sparky',
+        from_email: 'me@me.com'
       )
     end
   end
 
   describe '#update' do
-    let(:template) do
-      SparkPost::Template.new('123456', 'https://api.sparkpost.com')
-    end
-    let(:url) { 'https://api.sparkpost.com/api/v1/templates/sample-template' }
-
-    it 'calls request with correct data' do
-      prepared_data = {
-        content: {
-          from: 'me@me.com',
-          subject: 'test subject',
-          text: 'Hello Sparky',
-          html: '<h1>Hello Sparky</h1>'
-        },
-        options: {
-          transactional: true
-        }
-      }
-
-      allow(template).to receive(:request) do |req_url, req_api_key, req_data, req_verb|
-        expect(req_verb).to eq('PUT')
-        expect(req_api_key).to eq('123456')
-        expect(req_url).to eq(url)
-        expect(req_data).to eq(prepared_data)
+    context 'draft update' do
+      let(:template) do
+        SparkPost::Template.new('123456', 'https://api.sparkpost.com')
       end
+      let(:url) { 'https://api.sparkpost.com/api/v1/templates/sample-template' }
 
-      template.update(
-        'sample-template',
-        'me@me.com',
-        'test subject',
-        '<h1>Hello Sparky</h1>',
-        text: 'Hello Sparky',
-        is_transactional: true
-      )
+      it 'calls request with correct data' do
+        prepared_data = {
+          content: {
+            from: 'me@me.com',
+            subject: 'test subject',
+            text: 'Hello Sparky',
+            html: '<h1>Hello Sparky</h1>'
+          },
+          options: {
+            transactional: true
+          }
+        }
+
+        allow(template).to receive(:request) do |req_url, req_api_key, req_data, req_verb|
+          expect(req_verb).to eq('PUT')
+          expect(req_api_key).to eq('123456')
+          expect(req_url).to eq(url)
+          expect(req_data).to eq(prepared_data)
+        end
+
+        template.update(
+          'sample-template',
+          'me@me.com',
+          'test subject',
+          '<h1>Hello Sparky</h1>',
+          text: 'Hello Sparky',
+          is_transactional: true
+        )
+      end
+    end
+
+    context 'published update' do
+      let(:template) do
+        SparkPost::Template.new('123456', 'https://api.sparkpost.com')
+      end
+      let(:url) { 'https://api.sparkpost.com/api/v1/templates/sample-template?update_published=true' }
+
+      it 'calls request with correct data' do
+        prepared_data = {
+          content: {
+            from: 'me@me.com',
+            subject: 'test subject',
+            text: 'Hello Sparky',
+            html: '<h1>Hello Sparky</h1>'
+          },
+          options: {
+            transactional: true
+          }
+        }
+
+        allow(template).to receive(:request) do |req_url, req_api_key, req_data, req_verb|
+          expect(req_verb).to eq('PUT')
+          expect(req_api_key).to eq('123456')
+          expect(req_url).to eq(url)
+          expect(req_data).to eq(prepared_data)
+        end
+
+        template.update(
+          'sample-template',
+          'me@me.com',
+          'test subject',
+          '<h1>Hello Sparky</h1>',
+          text: 'Hello Sparky',
+          is_transactional: true,
+          update_published: true
+        )
+      end
     end
   end
 

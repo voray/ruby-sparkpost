@@ -26,11 +26,13 @@ module SparkPost
     end
 
     def update(id, from = nil, subject = nil, html = nil, **options)
+      params = {}
+      copy_value(options, :update_published, params, :update_published)
       data = deep_merge(
         payload_from_args(nil, from, subject, html),
         payload_from_options(options)
       )
-      request(endpoint(id), @api_key, data, 'PUT')
+      request(endpoint(id, params), @api_key, data, 'PUT')
     end
 
     def delete(id)
