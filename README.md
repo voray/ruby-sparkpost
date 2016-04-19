@@ -22,6 +22,8 @@ Or install it yourself as:
 
     $ gem install sparkpost
 
+**Important: Implementations may change frequently until we reach v1.0.0**
+
 ## Usage
 
 **Send an email**
