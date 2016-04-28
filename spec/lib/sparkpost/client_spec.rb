@@ -55,4 +55,14 @@ RSpec.describe SparkPost::Transmission do
       expect(client.template).to eq(client.template)
     end
   end
+
+  describe '#suppression_list' do
+    let(:client) { SparkPost::Client.new('123', 'http://sparkpost.com') }
+
+    it { expect(client.suppression_list).to be_kind_of(SparkPost::SuppressionList) }
+
+    it 'returns same instances on subsequent call' do
+      expect(client.suppression_list).to eq(client.suppression_list)
+    end
+  end
 end
