@@ -20,7 +20,6 @@ module SparkPost
         payload_from_args(id, from, subject, html),
         payload_from_options(options)
       )
-      request(endpoint, @api_key, data, 'POST')
       send_payload(data)
     end
 
@@ -45,7 +44,7 @@ module SparkPost
     end
 
     def list
-      request(endpoint, @api_key, nil, 'GET')
+      send_payload(nil, endpoint, 'GET')
     end
 
     def preview(id, substitution_data, draft = nil)
