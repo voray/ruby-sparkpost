@@ -57,7 +57,7 @@ RSpec.describe SparkPost::SuppressionList do
         expect(req_verb).to eq('GET')
       end
 
-      suppression_list.search(from: 'f', to: 't', types: %w('t' 'T'), sources: %w('s', 'S'), limit: '5')
+      suppression_list.search(from: 'f', to: 't', types: %w(t T), sources: %w(s S), limit: '5')
     end
 
     it 'calls request with correct params when there are single values' do
