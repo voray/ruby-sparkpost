@@ -23,6 +23,7 @@ module SparkPost
       # TODO: add validations for to, from
       html_message = content_from(options, :html) || html_message
       text_message = content_from(options, :text) || options[:text_message]
+      content_options = options.delete(:content) || {}
 
       if html_message.blank? && text_message.blank?
         raise ArgumentError, 'Content missing. Either provide html_message or
@@ -31,12 +32,12 @@ module SparkPost
 
       options_from_args = {
         recipients: prepare_recipients(to),
-        content: {
+        content: content_options.merge(
           from: from,
           subject: subject,
           text: options.delete(:text_message),
           html: html_message
-        },
+        ),
         options: {}
       }
 

@@ -132,6 +132,28 @@ RSpec.describe SparkPost::Transmission do
       )
     end
 
+    it 'allows user to specify addtional content attributes' do
+      expected_content = {
+        from: 'me@me.com',
+        subject: 'test subject',
+        text: nil,
+        html: '<h1>Hello Sparky</h1>',
+        reply_to: 'you@you.com'
+      }
+
+      expect(transmission).to receive(:send_payload) do |payload|
+        expect(payload[:content]).to eq(expected_content)
+      end
+
+      transmission.send_message(
+        'to@me.com',
+        'me@me.com',
+        'test subject',
+        '<h1>Hello Sparky</h1>',
+        content: { reply_to: 'you@you.com', subject: 'rogue subject' }
+      )
+    end
+
     it 'requests correct endpoint' do
       allow(transmission).to receive(:request) do |request_url|
         expect(request_url).to eq(url)
