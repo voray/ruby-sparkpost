@@ -74,6 +74,16 @@ sp = SparkPost::Client.new() # pass api key or get api key from ENV
 sp.transmission.send_message('RECIPIENT_EMAIL', 'SENDER_EMAIL', 'testemail', '<h1>Email with an attachment</h1>', values)
 ```
 
+**Search the suppression list**
+
+```ruby
+require 'sparkpost'
+
+sp = SparkPost::Client.new() # pass api key or get api key from ENV
+sp.suppression_list.search
+```
+
+
 See: [examples](examples)
 
 ## Development
