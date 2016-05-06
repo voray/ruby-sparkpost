@@ -20,7 +20,7 @@ module SparkPost
         payload_from_args(id, from, subject, html),
         payload_from_options(options)
       )
-      request(endpoint, @api_key, data, 'POST')
+      send_payload(data)
     end
 
     def update(id, from = nil, subject = nil, html = nil, **options)
@@ -30,32 +30,34 @@ module SparkPost
         payload_from_args(nil, from, subject, html),
         payload_from_options(options)
       )
-      request(endpoint(id, params), @api_key, data, 'PUT')
+      send_payload(data, endpoint(id, params), 'PUT')
     end
 
     def delete(id)
-      request(endpoint(id), @api_key, nil, 'DELETE')
+      send_payload(nil, endpoint(id), 'DELETE')
     end
 
     def get(id, draft = nil)
       params = {}
       params[:draft] = draft unless draft.nil?
-      request(endpoint(id, params), @api_key, nil, 'GET')
+      send_payload(nil, endpoint(id, params), 'GET')
     end
 
     def list
-      request(endpoint, @api_key, nil, 'GET')
+      send_payload(nil, endpoint, 'GET')
     end
 
     def preview(id, substitution_data, draft = nil)
       params = {}
       params[:draft] = draft unless draft.nil?
-      request(
-        endpoint("#{id}/preview", params),
-        @api_key,
+      send_payload(
         { substitution_data: substitution_data },
-        'POST'
+        endpoint("#{id}/preview", params), 'POST'
       )
+    end
+
+    def send_payload(data = {}, url = endpoint, method = 'POST')
+      request(url, @api_key, data, method)
     end
 
     private

@@ -14,9 +14,8 @@ module SparkPost
       @base_endpoint = "#{@api_host}/api/v1/transmissions"
     end
 
-    def send_payload(data = {})
-      # TODO: consider refactoring this into send_message in v2
-      request(endpoint, @api_key, data)
+    def send_payload(data = {}, url = endpoint, method = 'POST')
+      request(url, @api_key, data, method)
     end
 
     def send_message(to, from, subject, html_message = nil, **options)

@@ -273,4 +273,76 @@ RSpec.describe SparkPost::Template do
       end
     end
   end
+
+  describe '#send_payload' do
+    let(:template) do
+      SparkPost::Template.new('123456', 'https://api.sparkpost.com')
+    end
+    let(:url) { 'https://api.sparkpost.com/api/v1/templates' }
+    let(:data) do
+      {
+        content: {
+          from: {
+            email: 'me@me.com',
+            name: 'Sparky'
+          },
+          subject: 'test subject',
+          text: 'Hello Sparky',
+          html: '<h1>Hello Sparky</h1>'
+        },
+        options: {
+          transactional: true
+        },
+        id: 'sample-template',
+        name: 'Sample Template'
+      }
+    end
+
+    it 'calls request with correct data' do
+      allow(template).to receive(:request) do |req_url, req_api_key, req_data|
+        expect(req_api_key).to eq('123456')
+        expect(req_url).to eq(url)
+        expect(req_data).to eq(data)
+      end
+
+      template.send_payload(data)
+    end
+
+    it 'passes through delivery exception' do
+      allow(template).to receive(:request).and_raise(
+        SparkPost::DeliveryException.new('Some delivery error'))
+
+      expect do
+        template.send_payload(bad_data: true)
+      end.to raise_error(SparkPost::DeliveryException).with_message(
+        /Some delivery error/)
+    end
+
+    it 'passes responses' do
+      allow(template).to receive(:request).and_return(whatever: true)
+      expect(template.send_payload(data)).to eq(whatever: true)
+    end
+
+    it 'passes through url when passed' do
+      allow(template).to receive(:request) do |*args|
+        expect(args[0]).to eq('http://blackhole.com')
+      end
+      template.send_payload(nil, 'http://blackhole.com')
+    end
+
+    it 'calls endpoint if no url is provided' do
+      allow(template).to receive(:endpoint).and_return('oh-oh')
+      allow(template).to receive(:request) do |*args|
+        expect(args[0]).to eq('oh-oh')
+      end
+      template.send_payload(nil)
+    end
+
+    it 'passes correct method method when passed' do
+      allow(template).to receive(:request) do |*args|
+        expect(args[3]).to eq('DELETE')
+      end
+      template.send_payload(nil, nil, 'DELETE')
+    end
+  end
 end
