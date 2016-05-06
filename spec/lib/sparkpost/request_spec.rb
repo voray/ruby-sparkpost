@@ -64,7 +64,7 @@ RSpec.describe SparkPost::Request do
     end
 
     context 'when request was not successful' do
-      response = { errors: { message: 'end of world' } }
+      response = { errors: [{ message: 'end of world' }] }
       before do
         stub_request(:post, api_url).to_return(
           body: JSON.generate(response),
